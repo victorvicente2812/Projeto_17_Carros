@@ -77,14 +77,45 @@ if num_imagens > 0:
             caption=f"{modelo_selecionado} - Foto {st.session_state.foto_index + 1} de {num_imagens}",
             use_container_width=True
         )
-    
+    # --- GALERIA DE MINIATURAS ---
+    st.write("###📸 Galeria de Fotos")
+    st.write("Clique em uma miniatura para visualizá-la:")
+
+    # Define quantas miniaturas mostrar por linha (ex: 6)
+    cols_por_linha =6
+
+    # Cria as colunas necessárias para as miniaturas
+    # Se tivermos 10 imagens e 6 colunas, precisamos de 2 linhas
+    for i in range(0, num_imagens, cols_por_linha):
+        cols = st.columns(cols_por_linha)
+
+        # Preenche as colunas dessa linha
+        for j in range(cols_por_linha):
+            idx = i + j
+            if idx < num_imagens:
+                with cols[j]:
+                    # Exibe a miniatura como um botão clicável
+                    # O 'key' é importante para o streamlit saber qual botão é qual
+                    if st.button(f"Foto {idx + 1}", key=f"thumb_{idx}", use_container_width=True):
+                        st.session_state.foto_index = idx
+                        st.rerun() # Força o recarregamento para mostrar a foto grande
+
+                    # Exiba a imagem pequena abaixo do botão (opcional, mas fica bonito)
+                    st.image(lista_imagens[idx], width='stretch')
+
+else:
+    st.warning("Nenhuma imagem disponível para este modelo.")
+
+st.divider()
+
 
 
 
 # --- INFORMAÇÕES DO CARRO (MARKDOWN) ---
 
 
-### 📝 Descrição
 
+### 📝 Descrição
+{carro_info.get('description', 'Sem descrição disponível.')}
 
 
